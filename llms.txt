@@ -1,0 +1,63 @@
+# WildFly Maven Plugin
+
+> The WildFly Maven Plugin (`org.wildfly.plugins:wildfly-maven-plugin`) is the developer-facing build tool for provisioning, packaging, deploying, and running WildFly servers from Maven. It uses Galleon for server provisioning, integrates WildFly Glow for automatic discovery of required feature packs and layers, supports Bootable JAR packaging, container image building, CLI script execution, dev-mode with hot-reload, and direct deployment to running servers. This index covers the module structure, Maven goals, and documentation.
+
+## Documentation (Maven Site)
+
+- [Goals Overview](./plugin/src/site/markdown/index.md.vm): All plugin goals — package, provision, image, dev, run, start, start-jar, shutdown, deploy, deploy-only, deploy-artifact, redeploy, redeploy-only, undeploy, add-resource, execute-commands
+- [Usage Guide](./plugin/src/site/markdown/usage.md.vm): Goal-by-goal command-line usage reference
+- [Package Example](./plugin/src/site/markdown/package-example.md.vm): Provisioning with Galleon layers, Bootable JAR creation, WildFly Glow `<discover-provisioning-info/>` integration, CLI scripting, extra content, multiple deployments
+- [Provision Example](./plugin/src/site/markdown/provision-example.md.vm): Server provisioning with feature packs, layers, and specific WildFly versions
+- [Dev Example](./plugin/src/site/markdown/dev-example.md.vm): Dev-mode with hot-reload, source watching, debugging, user management
+- [Run Example](./plugin/src/site/markdown/run-example.md.vm): Running WildFly with deployed application
+- [Image Example](./plugin/src/site/markdown/image-example.md.vm): Building and pushing container images with Docker/Podman, JDK version configuration
+- [Channel Example](./plugin/src/site/markdown/channel-example.md.vm): Using WildFly Channels for version resolution
+- [Deployment Example](./plugin/src/site/markdown/deployment-example.md.vm): Deploying, redeploying, and undeploying applications
+- [Execute Commands Example](./plugin/src/site/markdown/execute-commands-example.md.vm): Running CLI commands against the server
+- [Add Resource Example](./plugin/src/site/markdown/add-resource-example.md.vm): Adding management resources
+- [Complex Example](./plugin/src/site/markdown/complex-example.md.vm): Multi-goal configurations
+- [FAQ](./plugin/src/site/fml/faq.fml): Frequently asked questions
+
+## Source Modules
+
+### plugin/ — Maven Plugin Mojos
+
+The main plugin module. Each Mojo implements a Maven goal:
+
+- [PackageServerMojo](./plugin/src/main/java/org/wildfly/plugin/provision/PackageServerMojo.java): `package` goal — provisions a server or Bootable JAR, applies CLI scripts, deploys the application
+- [ProvisionServerMojo](./plugin/src/main/java/org/wildfly/plugin/provision/ProvisionServerMojo.java): `provision` goal — provisions a server installation using Galleon
+- [AbstractProvisionServerMojo](./plugin/src/main/java/org/wildfly/plugin/provision/AbstractProvisionServerMojo.java): Shared provisioning logic, Galleon feature-pack and layer configuration, channel support
+- [GlowConfig](./plugin/src/main/java/org/wildfly/plugin/provision/GlowConfig.java): WildFly Glow integration — wraps `<discover-provisioning-info/>` configuration and delegates to `org.wildfly.glow.ScanArguments`
+- [ApplicationImageMojo](./plugin/src/main/java/org/wildfly/plugin/provision/ApplicationImageMojo.java): `image` goal — builds and pushes container images
+- [DevMojo](./plugin/src/main/java/org/wildfly/plugin/dev/DevMojo.java): `dev` goal — hot-reload development mode with source file watching
+- [RunMojo](./plugin/src/main/java/org/wildfly/plugin/server/RunMojo.java): `run` goal — starts server and deploys application
+- [StartMojo](./plugin/src/main/java/org/wildfly/plugin/server/StartMojo.java): `start` goal — starts server as background process
+- [StartJarMojo](./plugin/src/main/java/org/wildfly/plugin/server/StartJarMojo.java): `start-jar` goal — starts a Bootable JAR
+- [ShutdownMojo](./plugin/src/main/java/org/wildfly/plugin/server/ShutdownMojo.java): `shutdown` goal — shuts down a running server
+- [DeployMojo](./plugin/src/main/java/org/wildfly/plugin/deployment/DeployMojo.java): `deploy` goal — deploys to running server
+- [RedeployMojo](./plugin/src/main/java/org/wildfly/plugin/deployment/RedeployMojo.java): `redeploy` goal
+- [UndeployMojo](./plugin/src/main/java/org/wildfly/plugin/deployment/UndeployMojo.java): `undeploy` goal
+- [ExecuteCommandsMojo](./plugin/src/main/java/org/wildfly/plugin/cli/ExecuteCommandsMojo.java): `execute-commands` goal — runs CLI commands on a running server
+
+#### Supporting Classes
+
+- [WatchContext / WatchHandler](./plugin/src/main/java/org/wildfly/plugin/dev/WatchContext.java): File watching infrastructure for dev-mode
+- [CommandExecutor / OfflineCommandExecutor](./plugin/src/main/java/org/wildfly/plugin/cli/CommandExecutor.java): CLI command execution (online and embedded)
+- [AbstractServerConnection](./plugin/src/main/java/org/wildfly/plugin/common/AbstractServerConnection.java): Management client connection handling
+- [ChannelConfiguration](./plugin/src/main/java/org/wildfly/plugin/provision/ChannelConfiguration.java): WildFly Channel configuration support
+
+### core/ — Plugin Core API
+
+- [core/](./core/): Shared API for deploying applications — `Constants`, `MavenJBossLogger`, `MavenRepositoriesEnricher`, `MavenProxySelector`
+
+### tests/ — Integration Tests
+
+- [standalone-tests/](./tests/standalone-tests/): Standalone server mode tests
+- [domain-tests/](./tests/domain-tests/): Domain mode tests
+- [bootable-tests/](./tests/bootable-tests/): Bootable JAR tests
+- [shared/](./tests/shared/): Shared test utilities
+
+## Project Files
+
+- [README.adoc](./README.adoc): Project overview and release process
+- [pom.xml](./pom.xml): Parent POM — module list, dependency versions (Galleon, Glow, WildFly Core), build configuration
