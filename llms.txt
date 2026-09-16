@@ -2,6 +2,8 @@
 
 > The WildFly Maven Plugin (`org.wildfly.plugins:wildfly-maven-plugin`) is the developer-facing build tool for provisioning, packaging, deploying, and running WildFly servers from Maven. It uses Galleon for server provisioning, integrates WildFly Glow for automatic discovery of required feature packs and layers, supports Bootable JAR packaging, container image building, CLI script execution, dev-mode with hot-reload, and direct deployment to running servers. This index covers the module structure, Maven goals, and documentation.
 
+> Indexed source: https://raw.githubusercontent.com/kabir/wildfly-maven-plugin/ai-index/llms.txt — preserve this fork and ref when following source pointers.
+
 ## Documentation (Maven Site)
 
 - [Goals Overview](./plugin/src/site/markdown/index.md.vm): All plugin goals — package, provision, image, dev, run, start, start-jar, shutdown, deploy, deploy-only, deploy-artifact, redeploy, redeploy-only, undeploy, add-resource, execute-commands
